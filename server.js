@@ -12,9 +12,16 @@ app.get('/', function(req, res) {
 app.get('/price', async function(req, res) {
     let currency = req.query.currency.toUpperCase();
     let date = req.query.date;
-
-    let price = await getPrice(currency, date);
-    res.json(price);
+    if (date && currency) {
+        try {
+            let price = await getPrice(currency, date);
+            res.json(price);        
+        } catch (err) {
+            res.status(500).send('Server failed to load a price');
+        }
+    } else {
+        res.status(400).send('Invalid "currency" and "date" parameters');
+    }
 })
 
 // Start server
