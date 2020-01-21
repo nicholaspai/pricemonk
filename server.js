@@ -44,12 +44,22 @@ app.post('/price/slack', async function (req, res) {
             let priceVal = parseFloat(price.close);
             let priceTimestamp = moment(price.time);
             let message = (`Price found: ${priceVal} @ ${priceTimestamp.toString()}`);    
-            res.send(message);      
+            res.json({
+                response_type: "in_channel", 
+                // in_channel (allows everyone in channel to see) or 
+                // ephemeral (only for user)
+                message,
+                price: priceVal,
+                date: priceTimestamp
+            });      
         } catch (err) {
-            res.status(500).send('Server failed to load a price');
+            res.json({
+                response_type: "ephemeral",
+                text: "Sorry, that didn't work. Please try again. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)"
+            });
         }
     } else {
-        res.status(400).send('Invalid "currency" and "date" parameters');
+        res.status(400).send('Oops. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)');
     }
 })
 
