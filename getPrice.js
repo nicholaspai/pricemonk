@@ -1,50 +1,46 @@
-const moment = require('moment');
 const axios = require('axios');
 
-require('dotenv').config();
+const API_SERVER = 'https://api.pro.coinbase.com';
 
-const API_SERVER = 'https://api.nomics.com/v1';
-const API_KEY = process.env.NOMICS_API_KEY;
+/**
+ * Get historical price at a timestamp
+ * @param {*String} market_name e.g. "ETH-USD"
+ * @param {*String} date in GMT time zone, YYYY-MM-DDTHH:mm:ss (2020-01-09T00:0:00 is Jan 8 7pm EST)
+ */
+const getPrice = async (market_name, date) => {
+    // Format market name correctly
+    const MARKET = market_name.toUpperCase();
 
-const getPrice = async (market_name, start_date, end_date) => {
     // Form request
-    let ENDPOINT = '/exchange-rates/history';
-    let API_PARAM = `key=${API_KEY}`;
-    let CURRENCY_PARAM = `currency=${market_name}`;
-    let DATE_PARAM = `start=${start_date}&end=${end_date}`;
+    const ENDPOINT = `/products/${MARKET}/candles`;
+    const DATE_PARAM = `start=${date}&end=${date}`;
+    const GRANULARITY_PARAM = `granularity=60`; // in seconds, must be {60, 300, 900, 3600, 21600, 86400}
 
     // Make request
-    const URL = API_SERVER+ENDPOINT+'?'+API_PARAM+'&'+CURRENCY_PARAM+'&'+DATE_PARAM;
+    let URL = API_SERVER+ENDPOINT+'?'+DATE_PARAM+'&'+GRANULARITY_PARAM;
     const response = await axios.get(URL);
 
     // Parse response
     let prices = response.data;
+    let result;
     if (prices.length > 1) {
-        // TODO: For now, arbitrarily return later timestamp
+        // TODO: For now, arbitrarily return later of two median timestamps
+        // if there are an even number of timestamps
         let mid = prices.length / 2;
-        return prices[mid];
+        result = prices[mid];
     } else {
-        return prices[0];
+        result = prices[0];
     }
+    
+    return {
+        time: result[0]*1000,
+        low: result[1],
+        high: result[2],
+        open: result[3],
+        close: result[4],
+        volume: result[5]
+    };
 }
 
-async function main() {
-    try {
-        const SYMBOL = 'ETH';
-        const DATE_FORMAT = "MM-DD-YYYY HH:mm Z";
-        const START_DATE = moment('01-08-2020 22:59 +0500', DATE_FORMAT).toISOString();
-        const END_DATE = moment('01-09-2020 00:01 +0500', DATE_FORMAT).toISOString();
-        console.log(`Requesting the mid-price of ${SYMBOL} between ${START_DATE} and ${END_DATE}`);
-        let price = await getPrice(SYMBOL, START_DATE, END_DATE);
-        let price_val = parseFloat(price.rate);
-        let price_timestamp = moment(price.timestamp);
-        console.log(`PRICE => ${price_val}, DATE => ${price_timestamp.toString()}`);
-    } catch (e) {
-        console.error(`ERROR:`, e);
-        return;
-    }
-  
-}
-  
-main();
+module.exports = getPrice;
   
