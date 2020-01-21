@@ -1,9 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 const getPrice = require('./getPrice');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// Middleware
+app.use(
+    bodyParser.urlencoded({
+        extended: false,
+    })
+);
+
 
 // Routes
 app.get('/', function(req, res) {
@@ -26,18 +35,18 @@ app.get('/price', async function(req, res) {
 
 app.use(express.urlencoded());
 app.post('/price/slack', async function (req, res) {
-    console.log(req);
+    console.log(req.body);
     if (true) {
-        try {
-            let text = req.body.text.split(' ');
-            console.log('received text:', text);
-            // let currency = req.query.currency.toUpperCase();
-            // let date = req.query.date;        
-            // let price = await getPrice(currency, date);
-            // res.json(price);        
-        } catch (err) {
-            res.status(500).send('Server failed to load a price');
-        }
+        // try {
+        //     let text = req.body.text.split(' ');
+        //     console.log('received text:', text);
+        //     // let currency = req.query.currency.toUpperCase();
+        //     // let date = req.query.date;        
+        //     // let price = await getPrice(currency, date);
+        //     // res.json(price);        
+        // } catch (err) {
+        //     res.status(500).send('Server failed to load a price');
+        // }
     } else {
         res.status(400).send('Invalid "currency" and "date" parameters');
     }
