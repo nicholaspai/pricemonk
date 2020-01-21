@@ -57,7 +57,10 @@ app.post('/price/slack', async function (req, res) {
             });
         }
     } else {
-        res.status(400).send('Oops. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)');
+        res.json({
+            response_type: "ephemeral",
+            text: 'Oops. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)'
+        });
     }
 })
 
