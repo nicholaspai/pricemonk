@@ -23,6 +23,8 @@ app.get('/price', async function(req, res) {
         res.status(400).send('Invalid "currency" and "date" parameters');
     }
 })
+
+app.use(express.urlencoded());
 app.post('/price/slack', async function (req, res) {
     console.log(req);
     if (true) {
