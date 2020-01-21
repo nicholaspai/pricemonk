@@ -24,6 +24,7 @@ app.get('/price', async function(req, res) {
     }
 })
 app.post('/price/slack', async function (req, res) {
+    console.log(req);
     if (true) {
         try {
             let text = req.body.text.split(' ');
