@@ -1,11 +1,11 @@
 # Price Monk Historical Price Feed API
 
 ## Features
-- Returns historical prices with accuracy to the minute
-- Provides a `/POST` endpoint for Slack bot connectivity
+- Returns historical prices with accuracy to the minute.
+- Provides a `/POST` endpoint for Slack bot connectivity. For more information on how to customize Slack bots go [here](https://api.slack.com/interactivity/slash-commands).
 
 ## Exchanges 
-Returns prices from the following exchanges
+Returns prices from the following exchanges:
 
 Exchange Name | Date Added
 --- | ---
