@@ -43,14 +43,12 @@ app.post('/price/slack', async function (req, res) {
             let price = await getPrice(currency, date);
             let priceVal = parseFloat(price.close);
             let priceTimestamp = moment(price.time);
-            let message = (`Price found: ${priceVal} @ ${priceTimestamp.toString()}`);    
+            let message = (`${priceVal} @ ${priceTimestamp.toString()}`);    
             res.json({
                 response_type: "in_channel", 
                 // in_channel (allows everyone in channel to see) or 
                 // ephemeral (only for user)
-                message,
-                price: priceVal,
-                date: priceTimestamp
+                text: message
             });      
         } catch (err) {
             res.json({
