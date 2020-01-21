@@ -33,6 +33,7 @@ app.get('/price', async function(req, res) {
     }
 })
 
+const moment = require('moment');
 app.post('/price/slack', async function (req, res) {    
     if (req.body.text) {
         try {
@@ -40,9 +41,10 @@ app.post('/price/slack', async function (req, res) {
             let currency = arguments[0].toUpperCase();
             let date = arguments[1];        
             let price = await getPrice(currency, date);
-            console.log(price);
-            res.json(price);
-            // res.json(price);        
+            let priceVal = parseFloat(price.close);
+            let priceTimestamp = moment(price.time);
+            let message = (`PRICE => ${priceTimestamp}, DATE => ${priceVal.toString()}`);    
+            res.send(message);      
         } catch (err) {
             res.status(500).send('Server failed to load a price');
         }
