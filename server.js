@@ -41,6 +41,7 @@ app.post('/price/slack', async function (req, res) {
             let date = arguments[1];        
             let price = await getPrice(currency, date);
             console.log(price);
+            res.json(price);
             // res.json(price);        
         } catch (err) {
             res.status(500).send('Server failed to load a price');
