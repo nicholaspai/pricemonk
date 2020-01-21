@@ -10,10 +10,10 @@ app.get('/', function(req, res) {
     res.send('Price Monk Lives to Serve');
 })
 app.get('/price', async function(req, res) {
-    let currency = req.query.currency.toUpperCase();
-    let date = req.query.date;
-    if (date && currency) {
+    if (req.query.currency && req.query.date) {
         try {
+            let currency = req.query.currency.toUpperCase();
+            let date = req.query.date;        
             let price = await getPrice(currency, date);
             res.json(price);        
         } catch (err) {
