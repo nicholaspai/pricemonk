@@ -37,9 +37,29 @@ const moment = require('moment');
 app.post('/price/slack', async function (req, res) {    
     if (req.body.text) {
         try {
-            let arguments = req.body.text.split(' ');
-            let currency = arguments[0].toUpperCase();
-            let date = arguments[1];        
+            
+            // Set currency and date based on user input
+            let currency;
+            let date;
+
+            // Check for valid input
+            let slackArguments = req.body.text.split(' ');
+            if (!slackArguments[0]) {
+                res.json({
+                    response_type: "ephemeral",
+                    text: 'The first argument must be the name of a cryptocurrency market, like "eth-usd" or "btc-usd"'
+                });
+            } else {
+                currency = slackArguments[0].toUpperCase();
+            }
+            if (!slackArguments[1]) {
+                // If missing the date argument, then set it to the current timestamp
+                date = moment().format('YYYY-MM-DDTHH:mm') + ':00';
+            } else {
+                date = slackArguments[1];   
+            }
+   
+            // Fetch price
             let price = await getPrice(currency, date);
             let priceVal = parseFloat(price.close);
             let priceTimestamp = moment(price.time);
@@ -51,6 +71,7 @@ app.post('/price/slack', async function (req, res) {
                 text: message
             });      
         } catch (err) {
+            console.error(`ERROR:`, err);
             res.json({
                 response_type: "ephemeral",
                 text: "Sorry, that didn't work. Please try again. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)"
