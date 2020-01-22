@@ -17,7 +17,7 @@ app.use(
 // Routes
 app.get('/', function(req, res) {
     res.send('Price Monk Lives to Serve');
-})
+});
 app.get('/price', async function(req, res) {
     if (req.query.currency && req.query.date) {
         try {
@@ -31,7 +31,7 @@ app.get('/price', async function(req, res) {
     } else {
         res.status(400).send('Invalid "currency" and "date" parameters');
     }
-})
+});
 
 const moment = require('moment');
 app.post('/price/slack', async function (req, res) {    
@@ -62,7 +62,7 @@ app.post('/price/slack', async function (req, res) {
             text: 'Oops. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)'
         });
     }
-})
+});
 
 // Start server
 app.listen(PORT);
