@@ -59,6 +59,7 @@ app.post('/price/slack', async function (req, res) {
             } else {
                 date = slackArguments[1];   
             }
+            console.log(currency, date)
    
             // Fetch price
             let price = await getPrice(currency, date);
