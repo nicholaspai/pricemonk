@@ -44,7 +44,6 @@ app.post('/price/slack', async function (req, res) {
 
             // Check for valid input
             let slackArguments = req.body.text.split(' ');
-            console.log(slackArguments)
             if (!slackArguments[0]) {
                 res.json({
                     response_type: "ephemeral",
@@ -59,7 +58,6 @@ app.post('/price/slack', async function (req, res) {
             } else {
                 date = slackArguments[1];   
             }
-            console.log(currency, date)
    
             // Fetch price
             let price = await getPrice(currency, date);
@@ -73,7 +71,6 @@ app.post('/price/slack', async function (req, res) {
                 text: message
             });      
         } catch (err) {
-            console.error(`ERROR:`, err);
             res.json({
                 response_type: "ephemeral",
                 text: "Sorry, that didn't work. Please try again. Remember to pass exactly two arguments separated by a space after /price: a currency (e.g. eth-usd) and a date (GMT) with the special format YYYY-MM-DDTHH:mm:ss (e.g. 2020-01-09T00:00:00)"
