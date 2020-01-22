@@ -55,7 +55,7 @@ app.post('/price/slack', async function (req, res) {
             }
             if (!slackArguments[1]) {
                 // If missing the date argument, then set it to the current timestamp
-                date = moment().format('YYYY-MM-DDTHH:mm') + ':00';
+                date = moment().startOf('minute').subtract(5, 'minute').format('YYYY-MM-DDTHH:mm:ss');
             } else {
                 date = slackArguments[1];   
             }
