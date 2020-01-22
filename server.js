@@ -44,6 +44,7 @@ app.post('/price/slack', async function (req, res) {
 
             // Check for valid input
             let slackArguments = req.body.text.split(' ');
+            console.log(slackArguments)
             if (!slackArguments[0]) {
                 res.json({
                     response_type: "ephemeral",
